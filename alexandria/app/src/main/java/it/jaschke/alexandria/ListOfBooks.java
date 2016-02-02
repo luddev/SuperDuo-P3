@@ -112,6 +112,12 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        restartLoader();
+    }
+
+    @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         bookListAdapter.swapCursor(data);
         if (position != ListView.INVALID_POSITION) {

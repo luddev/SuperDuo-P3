@@ -73,6 +73,7 @@ public class BookService extends IntentService {
     private void fetchBook(String ean) {
 
         if(ean.length()!=13){
+            Log.w(LOG_TAG,"ISBN needs to be 13 character long.");
             return;
         }
         try {
@@ -85,6 +86,10 @@ public class BookService extends IntentService {
             );
             if(bookEntry.getCount()>0){
                 bookEntry.close();
+                Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+                messageIntent.putExtra(MainActivity.MESSAGE_KEY,getResources().getString(R.string.book_already_added));
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
+                Log.w(LOG_TAG,"Already Added");
                 return;
             }
 

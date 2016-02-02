@@ -60,6 +60,8 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
                 bookIntent.setAction(BookService.DELETE_BOOK);
                 getActivity().startService(bookIntent);
                 getActivity().getSupportFragmentManager().popBackStack();
+                getLoaderManager().restartLoader(LOADER_ID, null, BookDetail.this);
+
             }
         });
         return rootView;
