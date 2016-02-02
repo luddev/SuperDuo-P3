@@ -292,9 +292,9 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     @Override
     public void handleResult(Result result) {
         String ean = result.getContents();
-        Log.w(TAG,ean);
-        ean = patchEAN(ean);
-        Log.w(TAG,"New EAN " + ean);
+        ean = Utils.ISBN10toISBN13(ean);
+        Log.w(TAG,"EAN : " + ean);
+
         if(Utils.getNetworkConnectivity(getActivity())) {
             Intent fetchAndStoreBook = new Intent(getActivity(),BookService.class);
             fetchAndStoreBook.setAction(BookService.FETCH_BOOK);
@@ -314,13 +314,4 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         mCameraFramePreview.removeAllViews();
     }
 
-    public String patchEAN(String ean)    {
-        if(ean.length()==10 && !ean.startsWith("978")){
-            return ean="978"+ean;
-        }
-        if(ean.length()<13){
-            return "";
-        }
-        return ean;
-    }
 }

@@ -161,12 +161,15 @@ public class BookService extends IntentService {
         final String CATEGORIES = "categories";
         final String IMG_URL_PATH = "imageLinks";
         final String IMG_URL = "thumbnail";
-
+        Log.w(LOG_TAG,"Adding Book...");
         try {
             JSONObject bookJson = new JSONObject(bookJsonString);
             JSONArray bookArray;
             if(bookJson.has(ITEMS)){
                 bookArray = bookJson.getJSONArray(ITEMS);
+                Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+                messageIntent.putExtra(MainActivity.MESSAGE_KEY,getResources().getString(R.string.book_found));
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
             }else{
                 Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
                 messageIntent.putExtra(MainActivity.MESSAGE_KEY,getResources().getString(R.string.not_found));
