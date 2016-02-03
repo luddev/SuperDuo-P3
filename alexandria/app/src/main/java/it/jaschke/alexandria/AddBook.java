@@ -1,13 +1,10 @@
 package it.jaschke.alexandria;
 
 import android.app.Activity;
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,7 +15,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.squareup.picasso.Picasso;
 
-import it.jaschke.alexandria.CameraPreview.CameraPreview;
 import it.jaschke.alexandria.Utils.Utils;
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.services.BookService;
-import it.jaschke.alexandria.services.DownloadImage;
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
 
@@ -109,10 +104,16 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                     return;
                 }
                 //Once we have an ISBN, start a book intent
-                Intent bookIntent = new Intent(getActivity(), BookService.class);
-                bookIntent.putExtra(BookService.EAN, ean);
-                bookIntent.setAction(BookService.FETCH_BOOK);
-                getActivity().startService(bookIntent);
+                if(Utils.getNetworkConnectivity(getActivity())) {
+                    Intent bookIntent = new Intent(getActivity(), BookService.class);
+                    bookIntent.putExtra(BookService.EAN, ean);
+                    bookIntent.setAction(BookService.FETCH_BOOK);
+                    getActivity().startService(bookIntent);
+                }
+                else {
+                    Toast.makeText(getActivity(),"No Internet Connection :(",Toast.LENGTH_SHORT).show();
+                }
+
                 AddBook.this.restartLoader();
             }
         });
@@ -235,7 +236,12 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         ((TextView) rootView.findViewById(R.id.authors)).setText(authors.replace(",","\n"));
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if(Patterns.WEB_URL.matcher(imgUrl).matches()){
-            new DownloadImage((ImageView) rootView.findViewById(R.id.bookCover)).execute(imgUrl);
+            Picasso.with(getActivity())
+                    .load(imgUrl)
+                    .placeholder(R.drawable.ic_photo_black_24dp)
+                    .error(R.drawable.ic_broken_image_black_24dp)
+                    .fit()
+                    .into((ImageView) rootView.findViewById(R.id.bookCover));
             rootView.findViewById(R.id.bookCover).setVisibility(View.VISIBLE);
         }
 
@@ -291,19 +297,23 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
     @Override
     public void handleResult(Result result) {
-        String ean = result.getContents();
-        ean = Utils.ISBN10toISBN13(ean);
-        Log.w(TAG,"EAN : " + ean);
+        String isbn = result.getContents();
+        isbn = Utils.ISBN10toISBN13(isbn);
+        Log.w(TAG,"EAN : " + isbn);
 
-        if(Utils.getNetworkConnectivity(getActivity())) {
-            Intent fetchAndStoreBook = new Intent(getActivity(),BookService.class);
-            fetchAndStoreBook.setAction(BookService.FETCH_BOOK);
-            fetchAndStoreBook.putExtra(BookService.EAN,ean);
-            getActivity().startService(fetchAndStoreBook);
-        }
-        else {
-            Toast.makeText(getActivity(),"No Internet Connection :(",Toast.LENGTH_SHORT).show();
-        }
+        ean.setText(isbn);
+        ean.invalidate();
+
+//        if(Utils.getNetworkConnectivity(getActivity())) {
+//            Intent fetchAndStoreBook = new Intent(getActivity(),BookService.class);
+//            fetchAndStoreBook.setAction(BookService.FETCH_BOOK);
+//            fetchAndStoreBook.putExtra(BookService.EAN,isbn);
+//            getActivity().startService(fetchAndStoreBook);
+//            restartLoader();
+//        }
+//        else {
+//            Toast.makeText(getActivity(),"No Internet Connection :(",Toast.LENGTH_SHORT).show();
+//        }
 
         mCameraFramePreview.setVisibility(View.INVISIBLE);
 //        if(mCameraScanner.isActivated())    {

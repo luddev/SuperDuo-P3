@@ -39,5 +39,6 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'me.dm7.barcodescanner:zbar:1.8.4'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
 }

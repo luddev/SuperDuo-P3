@@ -44,6 +44,8 @@ public class Utils {
         String isbn13  = isbn10;
         if(isbn10.length() == 13)
             return isbn10;
+        if(isbn10.length() < 10)
+            return isbn10;
         isbn13 = "978" + isbn13.substring(0,9);
         int d;
         int sum = 0;
