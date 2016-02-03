@@ -111,7 +111,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                     getActivity().startService(bookIntent);
                 }
                 else {
-                    Toast.makeText(getActivity(),"No Internet Connection :(",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),getResources().getString(R.string.no_internet),Toast.LENGTH_SHORT).show();
                 }
 
                 AddBook.this.restartLoader();
