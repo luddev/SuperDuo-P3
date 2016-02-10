@@ -50,10 +50,13 @@ public class FootballScoresRemoteViewService extends RemoteViewsService {
             String date[] = new String[1];
             date[0] = mformat.format(fragmentdate);
 
-            Toast.makeText(mContext,"Updating Remote View With ID : " + mAppWidgetId + " Date : " + date[0],
-                    Toast.LENGTH_SHORT).show();
+
 
             mScoresData = mContext.getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),null,null,date,null);
+            if(mScoresData != null && mScoresData.moveToFirst())    {
+                Toast.makeText(mContext,"Updating Remote View With ID : " + mAppWidgetId + " Date : " + date[0],
+                        Toast.LENGTH_LONG).show();
+            }
 
         }
 
@@ -77,10 +80,11 @@ public class FootballScoresRemoteViewService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int i) {
-            Log.w("RV","Got View with ID : " + i);
-            RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.scores_list_item);
-            //rv.setTextViewText(R.id.widget_item, mWidgetItems.get(position).text);
+
+            RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.scores_list_widget_item);
+
             mScoresData.moveToPosition(i);
+
             rv.setTextViewText(R.id.home_name,mScoresData.getString(scoresAdapter.COL_HOME));
             rv.setTextViewText(R.id.away_name,mScoresData.getString(scoresAdapter.COL_AWAY));
             rv.setTextViewText(R.id.data_textview,mScoresData.getString(scoresAdapter.COL_DATE));
@@ -89,10 +93,9 @@ public class FootballScoresRemoteViewService extends RemoteViewsService {
                     mScoresData.getString(scoresAdapter.COL_HOME)));
             rv.setImageViewResource(R.id.away_crest,Utilies.getTeamCrestByTeamName(
                     mScoresData.getString(scoresAdapter.COL_AWAY)));
+
             // Return the remote views object.
             return rv;
-
-            //return null;
         }
 
         @Override
@@ -107,7 +110,9 @@ public class FootballScoresRemoteViewService extends RemoteViewsService {
 
         @Override
         public long getItemId(int i) {
-            return 0;
+
+            mScoresData.moveToPosition(i);
+            return mScoresData.getLong(scoresAdapter.COL_ID);
         }
 
         @Override

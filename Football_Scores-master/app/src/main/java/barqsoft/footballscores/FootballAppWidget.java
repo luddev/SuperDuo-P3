@@ -26,14 +26,13 @@ public class FootballAppWidget extends AppWidgetProvider {
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.football_app_widget);
 //        views.setTextViewText(R.id.appwidget_text, widgetText);
         views.setRemoteAdapter(R.id.football_widget_list,intent);
 
-        Toast.makeText(context,"Updating Remote View Data",Toast.LENGTH_SHORT).show();
-
+        //Toast.makeText(context,"Updating Remote View Data",Toast.LENGTH_SHORT).show();
+        views.setEmptyView(R.id.football_widget_list,R.id.score_list_widget_empty_view);
 
         Intent onCLickIntent = new Intent(context,MainActivity.class);
         PendingIntent toastPendingIntent = PendingIntent.getBroadcast(context, 0, onCLickIntent,
