@@ -118,11 +118,12 @@ public class myFetchService extends IntentService
                     processJSONdata(getString(R.string.dummy_data), getApplicationContext(), false);
                     return;
                 }
-
-
+                //processJSONdata(getString(R.string.dummy_data), getApplicationContext(), false);
                 processJSONdata(JSON_data, getApplicationContext(), true);
             } else {
                 //Could not Connect
+                Log.w("Fake Data", "Populating with fake data");
+                processJSONdata(getString(R.string.dummy_data), getApplicationContext(), false);
                 Log.d(LOG_TAG, "Could not connect to server.");
             }
         }

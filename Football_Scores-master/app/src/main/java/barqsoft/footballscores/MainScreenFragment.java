@@ -1,5 +1,8 @@
 package barqsoft.footballscores;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -33,6 +36,15 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     {
         Intent service_start = new Intent(getActivity(), myFetchService.class);
         getActivity().startService(service_start);
+        Context context = getActivity();
+        //Send Widget Update Broadcast.
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+        ComponentName widgetComponent = new ComponentName(context, FootballAppWidget.class);
+        int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+        Intent update = new Intent();
+        update.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
+        update.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        context.sendBroadcast(update);
     }
     public void setFragmentDate(String date)
     {
