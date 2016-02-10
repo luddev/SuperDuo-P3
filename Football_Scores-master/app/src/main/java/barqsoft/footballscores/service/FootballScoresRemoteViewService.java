@@ -45,24 +45,30 @@ public class FootballScoresRemoteViewService extends RemoteViewsService {
         public void onCreate() {
             Log.w("RV","Updating Remote View Data");
 
-            Date fragmentdate = new Date(System.currentTimeMillis() + 86400000);
+            Date fragmentdate = new Date(System.currentTimeMillis());
             SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
             String date[] = new String[1];
             date[0] = mformat.format(fragmentdate);
 
-
-
             mScoresData = mContext.getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),null,null,date,null);
             if(mScoresData != null && mScoresData.moveToFirst())    {
-                Toast.makeText(mContext,"Updating Remote View With ID : " + mAppWidgetId + " Date : " + date[0],
-                        Toast.LENGTH_LONG).show();
+//                Toast.makeText(mContext,"Updating Remote View With ID : " + mAppWidgetId + " Date : " + date[0],
+//                        Toast.LENGTH_LONG).show();
             }
 
         }
 
         @Override
         public void onDataSetChanged() {
-
+            Date fragmentdate = new Date(System.currentTimeMillis());
+            SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
+            String date[] = new String[1];
+            date[0] = mformat.format(fragmentdate);
+            mScoresData = mContext.getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),null,null,date,null);
+            if(mScoresData != null && mScoresData.moveToFirst())    {
+//                Toast.makeText(mContext,"Updating Remote View With ID : " + mAppWidgetId + " Date : " + date[0],
+//                        Toast.LENGTH_LONG).show();
+            }
         }
 
         @Override

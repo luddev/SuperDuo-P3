@@ -30,7 +30,6 @@ public class FootballAppWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.football_app_widget);
 //        views.setTextViewText(R.id.appwidget_text, widgetText);
         views.setRemoteAdapter(R.id.football_widget_list,intent);
-
         //Toast.makeText(context,"Updating Remote View Data",Toast.LENGTH_SHORT).show();
         views.setEmptyView(R.id.football_widget_list,R.id.score_list_widget_empty_view);
 

@@ -14,7 +14,7 @@
     <TextView
         android:gravity="center"
         android:id="@+id/score_list_widget_empty_view"
-        android:text="No Matches Today :("
+        android:text="@string/no_matches_today"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></TextView>
 
