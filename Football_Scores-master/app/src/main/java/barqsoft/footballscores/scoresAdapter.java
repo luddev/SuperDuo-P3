@@ -97,4 +97,19 @@ public class scoresAdapter extends CursorAdapter
         return shareIntent;
     }
 
+    public int getPosition(long itemID) {
+        int originalPosition = getCursor().getPosition();
+        if(getCursor().moveToFirst())   {
+            do{
+                if(getCursor().getInt(COL_ID) == itemID)    {
+                    int newPosition = getCursor().getPosition();
+                    getCursor().moveToPosition(originalPosition);
+                    return newPosition;
+                }
+            }while(getCursor().moveToNext());
+        }
+        getCursor().moveToPosition(originalPosition);
+        return -1;
+    }
+
 }

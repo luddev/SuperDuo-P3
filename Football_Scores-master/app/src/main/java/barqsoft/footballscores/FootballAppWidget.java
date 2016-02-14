@@ -17,6 +17,15 @@ import barqsoft.footballscores.service.FootballScoresRemoteViewService;
  */
 public class FootballAppWidget extends AppWidgetProvider {
 
+    public static final String APP_LAUNCH_ACTION = "barqsoft.footballscores.LAUNCH_APP_FROM_WIDGET";
+
+    public static final String APP_SELECTED_ID_EXTRA = "selected_id";
+
+    public static final String APP_WIDGETS_UPDATE = "barqsoft.footballscores.UPDATE_WIDGETS_DATA";
+
+    public static final String APP_WIDET_IDS = "widget_ids";
+
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -33,10 +42,15 @@ public class FootballAppWidget extends AppWidgetProvider {
         //Toast.makeText(context,"Updating Remote View Data",Toast.LENGTH_SHORT).show();
         views.setEmptyView(R.id.football_widget_list,R.id.score_list_widget_empty_view);
 
-        Intent onCLickIntent = new Intent(context,MainActivity.class);
+
+
+
+        Intent onCLickIntent = new Intent(context,FootballAppWidget.class);
+        onCLickIntent.setAction(FootballAppWidget.APP_LAUNCH_ACTION);
         PendingIntent toastPendingIntent = PendingIntent.getBroadcast(context, 0, onCLickIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.football_widget_list, toastPendingIntent);
+//        views.setOnClickPendingIntent(R.id.football_widget_list,toastPendingIntent);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -47,10 +61,27 @@ public class FootballAppWidget extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
+
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Log.w("GOTIT",intent.getAction());
+        if(intent.getAction().equals(FootballAppWidget.APP_LAUNCH_ACTION))  {
+            Intent launchApp = new Intent(context,MainActivity.class);
+            launchApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            launchApp.putExtra(FootballAppWidget.APP_SELECTED_ID_EXTRA,intent.getIntExtra(FootballAppWidget.APP_SELECTED_ID_EXTRA,0));
+            context.startActivity(launchApp);
+        }
+
+        if(intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+            int appWidgetIds[] = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+            onUpdate(context,AppWidgetManager.getInstance(context),appWidgetIds);
+        }
 
 
+        super.onReceive(context, intent);
+    }
 
     @Override
     public void onEnabled(Context context) {

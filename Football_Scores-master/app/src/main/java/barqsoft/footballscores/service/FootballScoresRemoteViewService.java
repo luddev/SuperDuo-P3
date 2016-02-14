@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.FootballAppWidget;
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.ScoresProvider;
 import barqsoft.footballscores.Utilies;
@@ -99,6 +100,11 @@ public class FootballScoresRemoteViewService extends RemoteViewsService {
                     mScoresData.getString(scoresAdapter.COL_HOME)));
             rv.setImageViewResource(R.id.away_crest,Utilies.getTeamCrestByTeamName(
                     mScoresData.getString(scoresAdapter.COL_AWAY)));
+
+            Intent fillinIntent = new Intent();
+            //TODO : Recieve this in MainActivity.
+            fillinIntent.putExtra(FootballAppWidget.APP_SELECTED_ID_EXTRA,mScoresData.getInt(scoresAdapter.COL_ID));
+            rv.setOnClickFillInIntent(R.id.scores_widget_item_element,fillinIntent);
 
             // Return the remote views object.
             return rv;

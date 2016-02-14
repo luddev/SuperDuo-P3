@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,9 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public static final int SCORES_LOADER = 0;
     private String[] fragmentdate = new String[1];
     private int last_selected_item = -1;
+
+    private ListView mScoresListView;
+
 
     public MainScreenFragment()
     {
@@ -46,20 +50,25 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         update.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         context.sendBroadcast(update);
     }
+
     public void setFragmentDate(String date)
     {
         fragmentdate[0] = date;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         update_scores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
+        mScoresListView = score_list;
         mAdapter = new scoresAdapter(getActivity(),null,0);
         score_list.setAdapter(mAdapter);
         getLoaderManager().initLoader(SCORES_LOADER,null,this);
         mAdapter.detail_match_id = MainActivity.selected_match_id;
+        //score_list.scrollTo();
+        Log.w("MainFragment","Selected match ID : "  + MainActivity.selected_match_id);
         score_list.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
@@ -104,6 +113,13 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         //Log.v(FetchScoreTask.LOG_TAG,"Loader query: " + String.valueOf(i));
         mAdapter.swapCursor(cursor);
         //mAdapter.notifyDataSetChanged();
+
+        int smoothScrollToPosition = mAdapter.getPosition(MainActivity.selected_match_id);
+        if(smoothScrollToPosition >= 0) {
+            //mScoresListView.setSelection(smoothScrollToPosition);
+            mScoresListView.smoothScrollToPositionFromTop(smoothScrollToPosition,0,500);
+        }
+
     }
 
     @Override

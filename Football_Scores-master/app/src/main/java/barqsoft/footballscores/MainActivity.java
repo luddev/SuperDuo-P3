@@ -19,7 +19,15 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG, "Reached MainActivity onCreate");
+
+        //if(getIntent().hasExtra(FootballAppWidget.APP_SELECTED_ID_EXTRA))   {
+            selected_match_id = getIntent().getIntExtra(FootballAppWidget.APP_SELECTED_ID_EXTRA,-1);
+            Log.w(LOG_TAG,"Selected match ID : "  + selected_match_id);
+        //}
+
+
         if (savedInstanceState == null) {
+            Log.d(LOG_TAG, "Reached MainActivity onCreate Making New Stuff.");
             my_main = new PagerFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, my_main)
@@ -73,7 +81,11 @@ public class MainActivity extends ActionBarActivity
         Log.v(save_tag,"selected id: "+savedInstanceState.getInt("Selected_match"));
         current_fragment = savedInstanceState.getInt("Pager_Current");
         selected_match_id = savedInstanceState.getInt("Selected_match");
+        if(getIntent().hasExtra(FootballAppWidget.APP_SELECTED_ID_EXTRA))   {
+            selected_match_id = getIntent().getIntExtra(FootballAppWidget.APP_SELECTED_ID_EXTRA,-1);
+        }
         my_main = (PagerFragment) getSupportFragmentManager().getFragment(savedInstanceState,"my_main");
+
         super.onRestoreInstanceState(savedInstanceState);
     }
 }
