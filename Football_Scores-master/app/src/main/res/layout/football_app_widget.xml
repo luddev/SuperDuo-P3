@@ -12,6 +12,7 @@
         android:layout_height="match_parent"></ListView>
 
     <TextView
+        android:contentDescription="@string/content_description_empty"
         android:gravity="center"
         android:id="@+id/score_list_widget_empty_view"
         android:text="@string/no_matches_today"
