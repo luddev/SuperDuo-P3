@@ -5,6 +5,7 @@
     android:elevation="4dp"
     android:id="@+id/scores_widget_item_element"
     android:background="@drawable/list_item"
+    android:layout_margin="5dp"
     >
     <LinearLayout
         android:orientation="horizontal" android:layout_width="match_parent"

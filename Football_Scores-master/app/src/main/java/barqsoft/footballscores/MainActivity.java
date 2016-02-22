@@ -1,11 +1,16 @@
 package barqsoft.footballscores;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import barqsoft.footballscores.service.myFetchService;
 
 public class MainActivity extends ActionBarActivity
 {
@@ -33,8 +38,29 @@ public class MainActivity extends ActionBarActivity
                     .add(R.id.container, my_main)
                     .commit();
         }
+        update_scores();
     }
 
+
+    private void update_scores()
+    {
+        Intent service_start = new Intent(this, myFetchService.class);
+        startService(service_start);
+        //FootballSyncAdapter.syncImmediately(getActivity());
+        //Send Widget Update Broadcast.
+        update_widget();
+    }
+
+    private void update_widget()    {
+        Context context = this;
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+        ComponentName widgetComponent = new ComponentName(context, FootballAppWidget.class);
+        int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+        Intent update = new Intent();
+        update.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
+        update.setAction(FootballAppWidget.APP_WIDGETS_UPDATE);
+        context.sendBroadcast(update);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

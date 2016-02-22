@@ -5,8 +5,10 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * Created by yehya khaled on 2/25/2015.
@@ -133,34 +135,43 @@ public class ScoresProvider extends ContentProvider
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values)
     {
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        try {
+            SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
+            switch (match_uri(uri))
+            {
+                case MATCHES:
+                    db.beginTransaction();
+                    int returncount = 0;
+                    try
+                    {
+                        for(ContentValues value : values)
+                        {
+                            long _id = db.insertWithOnConflict(DatabaseContract.SCORES_TABLE, null, value,
+                                    SQLiteDatabase.CONFLICT_REPLACE);
+                            if (_id != -1)
+                            {
+                                returncount++;
+                            }
+                        }
+                        db.setTransactionSuccessful();
+                    } finally {
+                        db.endTransaction();
+                    }
+                    getContext().getContentResolver().notifyChange(uri,null);
+                    return returncount;
+                default:
+                    return super.bulkInsert(uri,values);
+            }
+        }
+        catch(SQLiteException sqlexc)   {
+            Log.w("SQLExc", sqlexc.toString());
+            return 0;
+        }
         //db.delete(DatabaseContract.SCORES_TABLE,null,null);
         //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(muriMatcher.match(uri)));
-        switch (match_uri(uri))
-        {
-            case MATCHES:
-                db.beginTransaction();
-                int returncount = 0;
-                try
-                {
-                    for(ContentValues value : values)
-                    {
-                        long _id = db.insertWithOnConflict(DatabaseContract.SCORES_TABLE, null, value,
-                                SQLiteDatabase.CONFLICT_REPLACE);
-                        if (_id != -1)
-                        {
-                            returncount++;
-                        }
-                    }
-                    db.setTransactionSuccessful();
-                } finally {
-                    db.endTransaction();
-                }
-                getContext().getContentResolver().notifyChange(uri,null);
-                return returncount;
-            default:
-                return super.bulkInsert(uri,values);
-        }
+
+
     }
 
     @Override

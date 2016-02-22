@@ -6,6 +6,7 @@
         android:name="android.permission.INTERNET"
         android:maxSdkVersion="22" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -24,7 +25,10 @@
         <provider
             android:name=".ScoresProvider"
             android:exported="true"
-            android:authorities="barqsoft.footballscores" />
+            android:authorities="barqsoft.footballscores"
+            android:syncable="true"
+            />
+
 
         <activity
             android:name=".AboutActivity"
@@ -40,15 +44,20 @@
             android:permission="android.permission.BIND_REMOTEVIEWS"
             android:exported="false" />
 
-        <receiver android:name=".FootballAppWidget">
+        <receiver android:name=".FootballAppWidget"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="barqsoft.footballscores.UPDATE_WIDGETS_DATA" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/football_app_widget_info" />
         </receiver>
+        
+        
     </application>
 
 </manifest>

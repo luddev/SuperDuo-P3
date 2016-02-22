@@ -36,19 +36,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     {
     }
 
-    private void update_scores()
-    {
-        Intent service_start = new Intent(getActivity(), myFetchService.class);
-        getActivity().startService(service_start);
-        Context context = getActivity();
-        //Send Widget Update Broadcast.
-        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
-        ComponentName widgetComponent = new ComponentName(context, FootballAppWidget.class);
-        int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-        Intent update = new Intent();
-        update.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
-        update.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        context.sendBroadcast(update);
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     public void setFragmentDate(String date)
@@ -59,7 +50,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        update_scores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
         mScoresListView = score_list;

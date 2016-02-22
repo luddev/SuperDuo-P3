@@ -22,6 +22,7 @@
     <string name="share_text" translatable="true">Share</string>
     <string name="about" translatable="true">About</string>
     <string name="title_activity_about" translatable="false">AboutActivity</string>
+    <string name="widget_header_text" translatable="true">Matches today</string>
     <string name="about_text" translatable="true">
         This Application get Football Matches Score for the Premier League,Seria A,Bundesliga,Primera Division
         and the Uefa Champions League.
@@ -51,6 +52,5 @@
     <string name="content_description_away_team" translatable="true">Away team</string>
     <string name="content_description_score" translatable="true">score</string>
     <string name="content_description_data" translatable="true">match data</string>
-
 
 </resources>

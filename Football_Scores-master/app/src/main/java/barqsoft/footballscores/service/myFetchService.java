@@ -1,6 +1,8 @@
 package barqsoft.footballscores.service;
 
 import android.app.IntentService;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +25,7 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.FootballAppWidget;
 import barqsoft.footballscores.R;
 
 /**
@@ -41,9 +44,21 @@ public class myFetchService extends IntentService
     {
         getData("n2");
         getData("p2");
-
+//        update_widget();
         return;
     }
+
+//    private void update_widget()    {
+//        Log.w(LOG_TAG,"Updating Widget.");
+//        Context context = getApplicationContext();
+//        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+//        ComponentName widgetComponent = new ComponentName(context, FootballAppWidget.class);
+//        int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+//        Intent update = new Intent();
+//        update.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
+//        update.setAction(FootballAppWidget.APP_WIDGETS_UPDATE);
+//        context.sendBroadcast(update);
+//    }
 
     private void getData (String timeFrame)
     {
@@ -263,6 +278,7 @@ public class myFetchService extends IntentService
             int inserted_data = 0;
             ContentValues[] insert_data = new ContentValues[values.size()];
             values.toArray(insert_data);
+
             inserted_data = mContext.getContentResolver().bulkInsert(
                     DatabaseContract.BASE_CONTENT_URI,insert_data);
 

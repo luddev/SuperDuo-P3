@@ -26,6 +26,7 @@ public class FootballAppWidget extends AppWidgetProvider {
     public static final String APP_WIDET_IDS = "widget_ids";
 
 
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -74,7 +75,7 @@ public class FootballAppWidget extends AppWidgetProvider {
             context.startActivity(launchApp);
         }
 
-        if(intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+        if(intent.getAction().equals(FootballAppWidget.APP_WIDGETS_UPDATE) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
             int appWidgetIds[] = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
             onUpdate(context,AppWidgetManager.getInstance(context),appWidgetIds);
         }
