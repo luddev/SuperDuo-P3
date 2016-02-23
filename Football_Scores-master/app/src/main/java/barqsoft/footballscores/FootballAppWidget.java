@@ -43,6 +43,7 @@ public class FootballAppWidget extends AppWidgetProvider {
         //Toast.makeText(context,"Updating Remote View Data",Toast.LENGTH_SHORT).show();
         views.setEmptyView(R.id.football_widget_list,R.id.score_list_widget_empty_view);
 
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId,R.id.football_widget_list);
 
 
 
