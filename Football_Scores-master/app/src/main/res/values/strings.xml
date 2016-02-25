@@ -52,5 +52,6 @@
     <string name="content_description_away_team" translatable="true">Away team</string>
     <string name="content_description_score" translatable="true">score</string>
     <string name="content_description_data" translatable="true">match data</string>
+    <string name="content_description_share" translatable="true">share</string>
 
 </resources>
