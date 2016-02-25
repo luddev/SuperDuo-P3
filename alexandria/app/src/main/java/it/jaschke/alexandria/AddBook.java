@@ -121,33 +121,31 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         rootView.findViewById(R.id.scan_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // This is the callback method that the system will invoke when your button is
-                // clicked. You might do this by launching another app or by including the
-                //functionality directly in this app.
-                // Hint: Use a Try/Catch block to handle the Intent dispatch gracefully, if you
-                // are using an external app.
-                //when you're done, remove the toast below.
                 Context context = getActivity();
+                try {
+                    if(checkCameraHardware(getActivity()))  {
 
+                        //cameraFramePreview.addView(cameraPreview);
+                        mCameraFramePreview.setVisibility(View.VISIBLE);
+                        mCameraScanner.stopCamera();
+                        mCameraScanner.startCamera();
+                    }
+                    else {
+                        CharSequence text = "No Camera Found :(";
+                        int duration = Toast.LENGTH_SHORT;
 
-
-                if(checkCameraHardware(getActivity()))  {
-
-                    //cameraFramePreview.addView(cameraPreview);
-                    mCameraFramePreview.setVisibility(View.VISIBLE);
-                    mCameraScanner.stopCamera();
-                    mCameraScanner.startCamera();
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                    mCameraFramePreview.removeAllViews();
+                    mCameraFramePreview.addView(mCameraScanner);
+                    mCameraScanner.setResultHandler(AddBook.this);
                 }
-                else {
-                    CharSequence text = "No Camera Found :(";
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
+                catch(Exception exc)    {
+                    Log.w("TEST",exc.toString());
                 }
-                mCameraFramePreview.removeAllViews();
-                mCameraFramePreview.addView(mCameraScanner);
-                mCameraScanner.setResultHandler(AddBook.this);
+
+
 
 
 
