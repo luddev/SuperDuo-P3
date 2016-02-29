@@ -4,6 +4,7 @@ package it.jaschke.alexandria.api;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,11 +45,22 @@ public class BookListAdapter extends CursorAdapter {
 
         String imgUrl = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
 
-        Picasso.with(context)
-                .load(imgUrl)
-                .placeholder(R.drawable.ic_photo_black_24dp)
-                .error(R.drawable.ic_broken_image_black_24dp)
-                .into(viewHolder.bookCover);
+        if(Patterns.WEB_URL.matcher(imgUrl).matches()) {
+            Picasso.with(context)
+                    .load(imgUrl)
+                    .placeholder(R.drawable.ic_photo_black_24dp)
+                    .error(R.drawable.ic_broken_image_black_24dp)
+                    .into(viewHolder.bookCover);
+        }
+
+        if(imgUrl != null && imgUrl.length() > 0)  {
+            Picasso.with(context)
+                    .load(imgUrl)
+                    .placeholder(R.drawable.ic_photo_black_24dp)
+                    .error(R.drawable.ic_broken_image_black_24dp)
+                    .into(viewHolder.bookCover);
+        }
+
 
         String bookTitle = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
         viewHolder.bookTitle.setText(bookTitle);
